@@ -1,0 +1,87 @@
+import { Button, VerticalBox, GridBox } from "std-widgets.slint";
+
+export component AppWindow inherits Window {
+  in property <float> total-time: 100;
+  in-out property <float> start-time: 0;
+  in-out property <float> end-time: 100;
+  in-out property <int> frame-width: 800;
+  in-out property <int> frame-height: 480;
+  in-out property <float> current-time: start-time;
+  property <length> grip-width: 32px;
+  property <length> time-to-pixels: (self.width - grip-width * 2) / total-time;
+  in property <image> frame-image;
+  background: #000000ff;
+  min-width: 800px;
+  min-height: 480px;
+  GridLayout {
+    Row {
+      Rectangle {
+        background: #000000;
+        width: frame-width * 1px;
+        height: frame-height * 1px;
+      }
+    }
+    Row {
+      HorizontalLayout {
+        height: 64px;
+        Rectangle {
+          background: #000;
+          width: start-time * time-to-pixels;
+        }
+        Rectangle {
+          background: #359;
+          width: grip-width;
+          start-time-grip := TouchArea {
+            accessible-role: AccessibleRole.slider;
+            mouse-cursor: start-time-grip.pressed ? grabbing : grab;
+            moved => {
+              start-time = start-time + (start-time-grip.mouse-x - start-time-grip.pressed-x) / time-to-pixels;
+              start-time = max(0, min(end-time, start-time));
+            }
+            HorizontalLayout {
+              width: 75%;
+              height: 75%;
+              Rectangle { background: #ffffff33; }
+              Rectangle { background: #ffffff00; }
+              Rectangle { background: #ffffff33; }
+              Rectangle { background: #ffffff00; }
+              Rectangle { background: #ffffff33; }
+              Rectangle { background: #ffffff00; }
+              Rectangle { background: #ffffff33; }
+            } 
+          }
+        }
+        Rectangle {
+          background: #135;
+        }
+        Rectangle {
+          background: #359;
+          width: grip-width;
+          end-time-grip := TouchArea {
+            accessible-role: AccessibleRole.slider;
+            mouse-cursor: end-time-grip.pressed ? grabbing : grab;
+            moved => {
+              end-time = end-time + (end-time-grip.mouse-x - end-time-grip.pressed-x) / time-to-pixels;
+              end-time = max(start-time, min(total-time, end-time));
+            }
+            HorizontalLayout {
+              width: 75%;
+              height: 75%;
+              Rectangle { background: #ffffff33; }
+              Rectangle { background: #ffffff00; }
+              Rectangle { background: #ffffff33; }
+              Rectangle { background: #ffffff00; }
+              Rectangle { background: #ffffff33; }
+              Rectangle { background: #ffffff00; }
+              Rectangle { background: #ffffff33; }
+            } 
+          }
+        }
+        Rectangle {
+          background: #000;
+          width: (total-time - end-time) * time-to-pixels;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+[package]
+name = "vidtrim"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+slint = "1.8.0"
+winit = "0.30.5"
+
+[build-dependencies]
+slint-build = "1.8.0"
